@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ 微光</title>
+    <title>✨微光</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts 的 Inter 字体 -->
@@ -94,12 +94,12 @@
             <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">
                 ✨ 微光
             </h1>
-            <p class="text-gray-400 mb-8">发光吧！</p>
+            <p class="text-gray-200 mb-8">Fly to 2025!</p>
             <div class="max-w-2xl mx-auto">
                 <input 
                     type="search" 
                     id="searchInput" 
-                    placeholder="按 Enter 键进行 Google 搜索"
+                    placeholder="输入以筛选，按 Enter 键进行 Google 搜索"
                     class="w-full px-5 py-3 bg-gray-800/50 border border-gray-700 rounded-full text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                 >
             </div>
@@ -123,7 +123,7 @@
         
         <!-- 页脚 -->
         <footer class="text-center mt-16 text-gray-500 text-sm">
-            <p> Fly to 2025！</p>
+            <p>© 2025 微光. All Rights Reserved.</p>
         </footer>
 
     </div>
@@ -134,12 +134,15 @@
             // --- 气泡动画脚本 ---
             const canvas = document.getElementById('particleCanvas');
             const ctx = canvas.getContext('2d');
+            let animationFrameId;
             let particlesArray = [];
 
             const resizeCanvas = () => {
+                cancelAnimationFrame(animationFrameId);
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 initParticles(); 
+                animateParticles();
             };
             window.addEventListener('resize', resizeCanvas);
 
@@ -147,37 +150,33 @@
             class Bubble {
                 constructor() {
                     this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + Math.random() * 100; // 从底部开始
-                    this.radius = Math.random() * 8 + 2; // 气泡大小
-                    this.speedY = Math.random() * 1.5 + 0.5; // 上升速度
-                    this.speedX = Math.random() * 2 - 1; // 水平摆动
+                    this.y = canvas.height + Math.random() * 100;
+                    this.radius = Math.random() * 8 + 2;
+                    this.speedY = Math.random() * 1.5 + 0.5;
+                    this.speedX = Math.random() * 2 - 1;
                 }
                 update() {
                     this.y -= this.speedY;
                     this.x += this.speedX;
-
-                    // 到底部或左右出界后重置
-                    if (this.y < -this.radius || this.x < -this.radius || this.x > canvas.width + this.radius) {
+                    if (this.y < -this.radius) {
                         this.y = canvas.height + this.radius;
                         this.x = Math.random() * canvas.width;
-                        this.speedY = Math.random() * 1.5 + 0.5;
-                        this.radius = Math.random() * 8 + 2;
                     }
                 }
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; // 半透明填充
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
                     ctx.fill();
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; // 更亮的描边
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
                     ctx.stroke();
                 }
             }
             
             function initParticles() {
                 particlesArray = [];
-                let numberOfParticles = (canvas.width * canvas.height) / 15000;
-                if (numberOfParticles > 50) numberOfParticles = 100; // 限制最大气泡数
+                let numberOfParticles = (canvas.width * canvas.height) / 18000;
+                if (numberOfParticles > 40) numberOfParticles = 40;
                 for (let i = 0; i < numberOfParticles; i++) {
                     particlesArray.push(new Bubble());
                 }
@@ -189,16 +188,21 @@
                     particlesArray[i].update();
                     particlesArray[i].draw();
                 }
-                requestAnimationFrame(animateParticles);
+                animationFrameId = requestAnimationFrame(animateParticles);
             }
             
             resizeCanvas();
-            animateParticles();
             // --- 气泡动画脚本结束 ---
 
 
             // --- 导航站核心脚本 ---
+            // 在这里添加或修改你的网站数据
+            // pinned: true  -> 设置为置顶
             const sitesData = [
+                // 置顶示例
+                { category: 'ART', title: 'ChatGPT', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人', pinned: true },
+                { category: 'Gather', title: 'GitHub', url: 'https://github.com/', description: '全球最大的代码托管平台', pinned: true },
+
                 // 微光
                 { category: '微光', title: 'SEP', url: 'https://sep.ucas.ac.cn/', description: '中国科学院大学选课系统' },
                 { category: '微光', title: 'SINAP', url: 'http://www.sinap.cas.cn/', description: '中科院上海应用物理研究所' },
@@ -216,7 +220,6 @@
                 { category: 'Gather', title: '妖火网', url: 'https://www.yaohuo.me/wapindex.aspx?sid=-2', description: '一个综合性资源社区' },
                 { category: 'Gather', title: '吾爱破解', url: 'https://www.52pojie.cn/forum.php', description: '国内知名的安全技术论坛' },
                 { category: 'Gather', title: 'TG', url: 'https://web.telegram.org/', description: 'Telegram 网页版' },
-                { category: 'Gather', title: 'GitHub', url: 'https://github.com/', description: '全球最大的代码托管平台' },
                 { category: 'Gather', title: 'NodeLoc', url: 'https://www.nodeloc.com/', description: '主机和服务器交流社区' },
                 { category: 'Gather', title: 'NodeSeek', url: 'https://www.nodeseek.com/', description: '主机评测和优惠信息' },
                 { category: 'Gather', title: 'Reddit', url: 'https://www.reddit.com/', description: '全球热门话题和兴趣社区' },
@@ -237,7 +240,6 @@
                 { category: '云游', title: 'Cloudflare 临时邮件', url: 'https://mail.austinburn.tech/admin', description: '基于Cloudflare的临时邮件' },
 
                 // ART
-                { category: 'ART', title: 'Chatgpt', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人' },
                 { category: 'ART', title: 'DeepSeek', url: 'https://platform.deepseek.com/usage', description: 'DeepSeek AI 平台' },
                 { category: 'ART', title: 'ocoolAI', url: 'https://one.ooo.cool/', description: '一个集成的 AI 服务平台' },
                 { category: 'ART', title: '秘塔AI搜索', url: 'https://metaso.cn/', description: '一个新兴的 AI 搜索引擎' },
@@ -337,8 +339,10 @@
 
                 sites.forEach(site => {
                     const domain = new URL(site.url).hostname;
-                    const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                    // 使用更高质量的图标服务
+                    const iconUrl = `https://icon.horse/icon/${domain}`;
                     const fallbackIcon = site.title.charAt(0).toUpperCase();
+                    const pinIcon = site.pinned ? '📌' : '🔖';
 
                     const card = `
                         <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="site-card block p-4">
@@ -347,7 +351,7 @@
                                      alt="${site.title} icon" 
                                      class="w-8 h-8 rounded-md mr-3 bg-gray-700/50 object-contain flex-shrink-0"
                                      onerror="this.onerror=null; this.outerHTML='<div class=\\'w-8 h-8 rounded-md mr-3 bg-gray-700/50 flex items-center justify-center font-bold text-lg flex-shrink-0\\'>${fallbackIcon}</div>'">
-                                <h3 class="text-white font-semibold truncate">🔖 ${site.title}</h3>
+                                <h3 class="text-white font-semibold truncate">${pinIcon} ${site.title}</h3>
                             </div>
                             <p class="text-gray-400 text-sm h-10 overflow-hidden text-ellipsis">${site.description || '...'}</p>
                         </a>
@@ -375,9 +379,13 @@
 
             const filterAndRender = () => {
                 let filteredSites = sitesData;
+                
+                // 1. 按分类过滤
                 if (currentCategory !== '全部') {
                     filteredSites = sitesData.filter(site => site.category === currentCategory);
                 }
+                
+                // 2. 按搜索词过滤
                 if (currentSearchTerm) {
                     const lowerCaseSearchTerm = currentSearchTerm.toLowerCase();
                     filteredSites = filteredSites.filter(site => 
@@ -385,6 +393,10 @@
                         (site.description && site.description.toLowerCase().includes(lowerCaseSearchTerm))
                     );
                 }
+
+                // 3. 置顶排序
+                filteredSites.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
                 renderCards(filteredSites);
             };
             
