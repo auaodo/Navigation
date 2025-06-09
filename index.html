@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>微光 - 个人导航站</title>
+    <title>✨微光</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts 的 Inter 字体 -->
@@ -163,7 +163,7 @@
             const defaultSitesData = [
                 // 微光
                 { category: '微光', title: 'SEP', url: 'https://sep.ucas.ac.cn/', description: '中国科学院大学选课系统' },
-                { category: '微光', title: 'SINAP', url: 'http://www.sinap.cas.cn/', description: '中科院上海应用物理研究所' },
+                { category: '微光', title: 'SINAP', url: 'http://www.sinap.cas.cn/', description: '中科院上海应用物理研究所'， pinned: true },
                 { category: '微光', title: '慧科研', url: 'https://scholarin.cn/tools/database', description: '科研数据库导航' },
                 { category: '微光', title: '仪器平台', url: 'http://samp.cas.cn/', description: '中国科学院仪器设备共享管理平台' },
                 { category: '微光', title: '科教处', url: 'https://www.sinap.ac.cn/dp?deptid=132', description: '上海应物所科教处' },
@@ -199,7 +199,7 @@
                 { category: '云游', title: 'Cloudflare 临时邮件', url: 'https://mail.austinburn.tech/admin', description: '基于Cloudflare的临时邮件' },
 
                 // ART
-                { category: 'ART', title: 'ChatGPT', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人', pinned: true },
+                { category: 'ART', title: 'ChatGPT', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人' },
                 { category: 'ART', title: 'DeepSeek', url: 'https://platform.deepseek.com/usage', description: 'DeepSeek AI 平台' },
                 { category: 'ART', title: 'ocoolAI', url: 'https://one.ooo.cool/', description: '一个集成的 AI 服务平台' },
                 { category: 'ART', title: '秘塔AI搜索', url: 'https://metaso.cn/', description: '一个新兴的 AI 搜索引擎' },
@@ -586,8 +586,8 @@
             
                 function initParticles() {
                     particlesArray = [];
-                    let numberOfParticles = (canvas.width * canvas.height) / 18000;
-                    if (numberOfParticles > 40) numberOfParticles = 40;
+                    let numberOfParticles = (canvas.width * canvas.height) / 10000;
+                    if (numberOfParticles > 100) numberOfParticles = 100;
                     for (let i = 0; i < numberOfParticles; i++) {
                         particlesArray.push(new Bubble());
                     }
