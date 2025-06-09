@@ -13,17 +13,26 @@
     <style>
         /* 自定义全局样式 */
         html {
-            /* 深邃的渐变背景 */
-            background: #0f0c29; 
-            background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            /* 默认使用横版背景图 */
+            background-image: url('https://pic.imgdb.cn/item/62bd50cc1d64b0706604e8d9.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed; /* 固定背景图，滚动时不移动 */
             overflow-x: hidden; /* 防止横向滚动 */
         }
+        
+        /* 响应式媒体查询：当屏幕宽度小于等于768px时，使用竖版背景图 */
+        @media (max-width: 768px) {
+            html {
+                background-image: url('https://pic.imgdb.cn/item/62bd5a9c1d64b07066153c1f.jpg');
+            }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            background: transparent; /* 使 body 背景透明 */
+            background: transparent; /* 使 body 背景透明以显示 html 的背景图 */
         }
         
         /* 粒子画布样式 */
@@ -51,14 +60,14 @@
             background: rgba(107, 114, 128, 0.8);
         }
 
-        /* 玻璃拟态效果 for a container */
+        /* 玻璃拟态效果容器 */
         .glassmorphism {
-            background: rgba(31, 41, 55, 0.4); /* 半透明背景 */
-            backdrop-filter: blur(10px); /* 高斯模糊 */
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(17, 24, 39, 0.5); /* 增加一点不透明度以提高可读性 */
+            backdrop-filter: blur(12px); /* 高斯模糊 */
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1); /* 细微边框 */
             border-radius: 1rem; /* 圆角 */
-            padding: 1rem;
+            padding: 1.25rem; /* 增加内边距 */
         }
 
         /* 卡片样式和动效 */
@@ -85,7 +94,7 @@
         <!-- 头部：Logo 和搜索框 -->
         <header class="text-center mb-12">
             <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">
-                🚀 我的导航站
+                🚀 微光
             </h1>
             <p class="text-gray-400 mb-8">一个简洁、高效的个人网站导航</p>
             <div class="max-w-2xl mx-auto">
@@ -108,7 +117,7 @@
             <div id="sitesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 <!-- 网站卡片将由 JS 动态生成 -->
             </div>
-             <div id="noResults" class="text-center py-12 text-gray-500 hidden">
+             <div id="noResults" class="text-center py-12 text-gray-400 hidden">
                 <p class="text-2xl">😅</p>
                 <p class="mt-2">没有找到匹配的网站</p>
             </div>
@@ -116,7 +125,7 @@
         
         <!-- 页脚 -->
         <footer class="text-center mt-16 text-gray-500 text-sm">
-            <p>&copy; 2025 我的导航站. All Rights Reserved.</p>
+            <p>&copy; Fly to 2025. All Rights Reserved.</p>
         </footer>
 
     </div>
@@ -129,23 +138,21 @@
             const ctx = canvas.getContext('2d');
             let particlesArray = [];
 
-            // 设置画布尺寸
             const resizeCanvas = () => {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+                initParticles(); // 窗口变化时重新生成粒子
             };
-            resizeCanvas();
-
             window.addEventListener('resize', resizeCanvas);
 
-            // 粒子类
             class Particle {
                 constructor() {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
                     this.size = Math.random() * 2 + 1;
-                    this.speedX = Math.random() * 1 - 0.5;
-                    this.speedY = Math.random() * 1 - 0.5;
+                    this.speedX = Math.random() * 0.5 - 0.25;
+                    this.speedY = Math.random() * 0.5 - 0.25;
+                    this.color = 'rgba(255, 255, 255, 0.6)';
                 }
                 update() {
                     if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
@@ -154,44 +161,160 @@
                     this.y += this.speedY;
                 }
                 draw() {
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.fillStyle = this.color;
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
             
-            // 初始化粒子
-            const initParticles = () => {
+            function initParticles() {
                 particlesArray = [];
-                const numberOfParticles = (canvas.width * canvas.height) / 9000;
+                let numberOfParticles = (canvas.width * canvas.height) / 9000;
+                if (numberOfParticles > 150) numberOfParticles = 150; // 限制最大粒子数
                 for (let i = 0; i < numberOfParticles; i++) {
                     particlesArray.push(new Particle());
                 }
-            };
-            initParticles();
-
-            // 动画循环
-            const animateParticles = () => {
+            }
+            
+            function animateParticles() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for (let i = 0; i < particlesArray.length; i++) {
                     particlesArray[i].update();
                     particlesArray[i].draw();
                 }
                 requestAnimationFrame(animateParticles);
-            };
+            }
+            
+            resizeCanvas();
             animateParticles();
             // --- 粒子动画脚本结束 ---
 
 
             // --- 导航站核心脚本 ---
             const sitesData = [
-                { category: 'AI 工具', title: 'ChatGPT', url: 'https://chat.openai.com/', description: 'OpenAI 出品的强大通用语言模型。' },
-                { category: 'AI 工具', title: 'Midjourney', url: 'https://www.midjourney.com/', description: '一个优秀的 AI 绘画和图像生成服务。' },
-                { category: '宝藏网站', title: 'Product Hunt', url: 'https://www.producthunt.com/', description: '发现最新最酷的互联网产品。' },
-                { category: '图片与视频', title: 'Pexels', url: 'https://www.pexels.com/', description: '提供海量免费可商用的高清图片。' },
-                { category: '设计与创意', title: 'Figma', url: 'https://www.figma.com/', description: '一个基于云端的协作式 UI 设计工具。' },
-                { category: '编程与开发', title: 'GitHub', url: 'https://github.com/', description: '面向开源及私有软件项目的托管平台。' },
+                // 微光
+                { category: '微光', title: 'SEP', url: 'https://sep.ucas.ac.cn/', description: '中国科学院大学选课系统' },
+                { category: '微光', title: 'SINAP', url: 'http://www.sinap.cas.cn/', description: '中科院上海应用物理研究所' },
+                { category: '微光', title: '慧科研', url: 'https://scholarin.cn/tools/database', description: '科研数据库导航' },
+                { category: '微光', title: '仪器平台', url: 'http://samp.cas.cn/', description: '中国科学院仪器设备共享管理平台' },
+                { category: '微光', title: '科教处', url: 'https://www.sinap.ac.cn/dp?deptid=132', description: '上海应物所科教处' },
+                { category: '微光', title: 'Materials Project', url: 'https://legacy.materialsproject.org/', description: '开放的材料科学数据平台' },
+                { category: '微光', title: 'OA', url: 'https://oa.sinap.ac.cn/', description: '上海应物所办公自动化系统' },
+                { category: '微光', title: '科技云', url: 'https://www.cstcloud.cn/', description: '中国科技云官方网站' },
+
+                // Gather
+                { category: 'Gather', title: 'Zotero 中文社区', url: 'https://zotero-chinese.com/', description: 'Zotero 文献管理工具中文社区' },
+                { category: 'Gather', title: 'Magic for Zotero', url: 'https://gitee.com/zotero-chinese/zotero-magic-for-user', description: 'Zotero 插件与教程' },
+                { category: 'Gather', title: 'LINUX DO', url: 'https://linux.do/', description: '一个活跃的 Linux 技术论坛' },
+                { category: 'Gather', title: '妖火网', url: 'https://www.yaohuo.me/wapindex.aspx?sid=-2', description: '一个综合性资源社区' },
+                { category: 'Gather', title: '吾爱破解', url: 'https://www.52pojie.cn/forum.php', description: '国内知名的安全技术论坛' },
+                { category: 'Gather', title: 'TG', url: 'https://web.telegram.org/', description: 'Telegram 网页版' },
+                { category: 'Gather', title: 'GitHub', url: 'https://github.com/', description: '全球最大的代码托管平台' },
+                { category: 'Gather', title: 'NodeLoc', url: 'https://www.nodeloc.com/', description: '主机和服务器交流社区' },
+                { category: 'Gather', title: 'NodeSeek', url: 'https://www.nodeseek.com/', description: '主机评测和优惠信息' },
+                { category: 'Gather', title: 'Reddit', url: 'https://www.reddit.com/', description: '全球热门话题和兴趣社区' },
+                { category: 'Gather', title: 'Medium', url: 'https://medium.com/', description: '一个高质量的文章和故事平台' },
+
+                // 云游
+                { category: '云游', title: 'CAS邮件', url: 'https://mail.cstnet.cn/', description: '中国科学院邮件系统' },
+                { category: '云游', title: '科技云盘', url: 'https://pan.cstcloud.cn/web/index.html', description: '中国科技云的网盘服务' },
+                { category: '云游', title: 'Outlook', url: 'https://outlook.live.com/mail/', description: '微软旗下的免费个人邮箱' },
+                { category: '云游', title: 'Gmail', url: 'https://mail.google.com/mail/u/0/', description: '谷歌提供的电子邮件服务' },
+                { category: '云游', title: 'QQ邮箱', url: 'https://wx.mail.qq.com/home/index?sid=zUxUYoxbYUou4TFzAGA0YwAA', description: '腾讯公司推出的邮箱服务' },
+                { category: '云游', title: 'USTC邮件系统', url: 'https://email.ustc.edu.cn/', description: '中国科学技术大学邮件系统' },
+                { category: '云游', title: 'USTC校友', url: 'https://mail.ustc.edu/', description: '中国科学技术大学校友邮箱' },
+                { category: '云游', title: '宝塔', url: 'https://47.84.84.77:12138/42e42c19', description: '服务器管理面板' },
+                { category: '云游', title: '青龙', url: 'http://959656.xyz/env', description: '定时任务管理面板' },
+                { category: '云游', title: 'AList', url: 'http://959656.xyz:81/', description: '一个支持多种存储的文件列表程序' },
+                { category: '云游', title: 'Zero', url: 'https://0.email/mail/inbox?category=All Mail', description: '临时匿名邮箱服务' },
+                { category: '云游', title: 'Cloudflare 临时邮件', url: 'https://mail.austinburn.tech/admin', description: '基于Cloudflare的临时邮件' },
+
+                // ART
+                { category: 'ART', title: 'Chatgpt', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人' },
+                { category: 'ART', title: 'DeepSeek', url: 'https://platform.deepseek.com/usage', description: 'DeepSeek AI 平台' },
+                { category: 'ART', title: 'ocoolAI', url: 'https://one.ooo.cool/', description: '一个集成的 AI 服务平台' },
+                { category: 'ART', title: '秘塔AI搜索', url: 'https://metaso.cn/', description: '一个新兴的 AI 搜索引擎' },
+                { category: 'ART', title: 'Perplexity', url: 'https://www.perplexity.ai/', description: '对话式 AI 搜索引擎' },
+                { category: 'ART', title: 'Grok', url: 'https://grok.com/', description: 'xAI 公司推出的聊天机器人' },
+                { category: 'ART', title: 'Claude', url: 'https://claude.ai/new', description: 'Anthropic 公司开发的 AI 助手' },
+                { category: 'ART', title: 'Cursor', url: 'https://www.cursor.com/cn/settings', description: '专为 AI 编程设计的代码编辑器' },
+                { category: 'ART', title: 'GitHub Copilot', url: 'https://github.com/copilot/c/e798f8e5-b48b-47d6-aabe-28c1f22e2625', description: 'GitHub AI 编程伙伴' },
+                { category: 'ART', title: 'Gemini', url: 'https://gemini.google.com/app?utm_source=g1', description: '谷歌的多模态 AI 模型' },
+
+                // 流萤
+                { category: '流萤', title: '虫部落', url: 'http://scholar.chongbuluo.com/', description: '强大的学术搜索引擎聚合' },
+                { category: '流萤', title: 'ResearchGate', url: 'https://www.researchgate.net/', description: '科学家的社交网络服务网站' },
+                { category: '流萤', title: 'ProQuest', url: 'https://www.proquest.com/', description: '全球性的学术信息数据库' },
+                { category: '流萤', title: 'Researcher', url: 'https://www.researcher-app.com/feed/all', description: '发现和阅读最新的学术论文' },
+                { category: '流萤', title: 'Researcher.Life', url: 'https://researcher.life/home', description: '面向研究人员的生态系统' },
+                { category: '流萤', title: 'Scite', url: 'https://scite.ai/', description: '查全文献引用' },
+                { category: '流萤', title: 'Research Rabbit', url: 'https://researchrabbitapp.com/', description: '文献发现与可视化工具' },
+                { category: '流萤', title: '小木虫', url: 'http://muchong.com/bbs/', description: '国内知名的科研学术交流平台' },
+                { category: '流萤', title: 'X-MOL', url: 'https://www.x-mol.com/chem', description: '化学和材料领域的学术平台' },
+                { category: '流萤', title: '知网', url: 'https://www.cnki.net/', description: '中国知网' },
+                { category: '流萤', title: 'CitNetExplorer', url: 'https://www.citnetexplorer.nl/', description: '引文网络分析和可视化软件' },
+                { category: '流萤', title: 'HistCite', url: 'https://en.freedownloadmanager.org/Windows-PC/HistCite-FREE.html', description: '引文编史分析软件' },
+                { category: '流萤', title: '科研者之家', url: 'https://www.home-for-researchers.com/static/index.html#/', description: '科研学术导航网站' },
+
+                // Tools
+                { category: 'Tools', title: '公式编辑', url: 'https://www.latexlive.com/', description: '在线 LaTeX 公式编辑器' },
+                { category: 'Tools', title: '公式王', url: 'https://gongshi.wang/', description: '数学公式搜索引擎' },
+                { category: 'Tools', title: '文档翻译-文件', url: 'https://www.onlinedoctranslator.com/zh-CN/', description: '免费在线文档翻译器' },
+                { category: 'Tools', title: '前端技术', url: 'https://www.salted-fish.top/', description: '各种好用框架收集' },
+                { category: 'Tools', title: 'Article Rewriter', url: 'https://www.article-rewriter-tool.com/', description: '在线文章改写工具' },
+                { category: 'Tools', title: 'LanguageTool', url: 'https://languagetool.org/', description: '多语言语法、风格和拼写检查' },
+                { category: 'Tools', title: '术语在线', url: 'https://www.termonline.cn/index', description: '权威术语知识服务平台' },
+                { category: 'Tools', title: 'Academic Phrasebank', url: 'https://www.phrasebank.manchester.ac.uk/', description: '曼彻斯特大学学术语料库' },
+                { category: 'Tools', title: 'MATLAB', url: 'https://matlab.mathworks.com/', description: '商业数学软件' },
+                { category: 'Tools', title: '爱资料工具', url: 'https://www.toolnb.com/', description: '一个在线工具集合网站' },
+                { category: 'Tools', title: '元素周期表', url: 'https://ptable.com/?lang=zh-hans', description: '动态交互式元素周期表' },
+
+                // Others
+                { category: 'Others', title: '炫猿', url: 'http://xydh.fun', description: '看看主站今天更新了啥' },
+                { category: 'Others', title: '哔哩', url: 'https://www.bilibili.com/', description: 'Bilibili 视频网站' },
+                { category: 'Others', title: '腾讯视频', url: 'https://v.qq.com/', description: '在线视频平台' },
+                { category: 'Others', title: '爱奇艺', url: 'https://www.iqiyi.com/', description: '在线视频平台' },
+                { category: 'Others', title: '微博', url: 'https://weibo.com/', description: '社交媒体平台' },
+                { category: 'Others', title: '知乎', url: 'https://www.zhihu.com/', description: '中文互联网高质量的问答社区' },
+                { category: 'Others', title: '抖音', url: 'https://www.douyin.com/discover', description: '短视频平台' },
+                { category: 'Others', title: 'YouTube', url: 'https://www.youtube.com/', description: '全球最大的视频分享网站' },
+
+                // Search
+                { category: 'Search', title: '阿虚同学', url: 'https://axutongxue.com/', description: '储物间，软件资源分享' },
+                { category: 'Search', title: '果核剥壳', url: 'https://www.ghxi.com/', description: '精品软件分享网站' },
+                { category: 'Search', title: '24k导航', url: 'https://www.24kdh.net/', description: '一个简洁实用的导航网站' },
+                { category: 'Search', title: 'Авторские', url: 'https://lrepacks.net/', description: '俄罗斯软件破解网站' },
+                { category: 'Search', title: 'Get Into PC', url: 'https://igetintopc.com/', description: '免费下载所需应用程序' },
+                { category: 'Search', title: 'Mobilism', url: 'https://forum.mobilism.org/viewforum.php?f=399', description: '移动应用和电子书论坛' },
+                { category: 'Search', title: 'Downloadly', url: 'https://downloadlynet.ir/', description: '伊朗的软件下载网站' },
+                { category: 'Search', title: '亿破姐', url: 'https://www.ypojie.com/', description: '精品绿色软件分享' },
+                { category: 'Search', title: '神秘的热心网友', url: 'https://imyshare.com/navigation/', description: '资源网站导航' },
+                { category: 'Search', title: 'RuTracker.org', url: 'https://rutracker.org/forum/index.php', description: '俄罗斯最大的BT种子服务器' },
+                { category: 'Search', title: 'Zlibrary 检索', url: 'https://zlib.app/', description: '电子书搜索引擎' },
+                { category: 'Search', title: '423Down', url: 'https://www.423down.com/', description: '知名绿色软件下载站' },
+                { category: 'Search', title: 'APKTurbo', url: 'https://www.apkturbo.com/', description: '安卓应用下载' },
+                { category: 'Search', title: '3DM', url: 'https://bbs.3dmgame.com/forum.php', description: '3DMGAME 游戏论坛' },
+                { category: 'Search', title: '胡萝卜周', url: 'https://www.huluobuzhou.com/', description: '分享绿色便携软件' },
+                { category: 'Search', title: '不坑老师资', url: 'https://www.44886.com/', description: '资源分享网站' },
+                { category: 'Search', title: '阿榮福利味', url: 'https://www.azofreeware.com/', description: '免费软件下载' },
+                { category: 'Search', title: '辰夕小站', url: 'https://cxapk.com/', description: '安卓软件分享' },
+                { category: 'Search', title: '大眼仔旭', url: 'https://www.dayanzai.me/', description: '精品软件分享基地' },
+
+                // 账户
+                { category: '账户', title: 'ORCID', url: 'https://orcid.org/my-orcid?orcid=0000-0003-0575-1658', description: '开放研究者与贡献者ID' },
+                { category: '账户', title: '上海光源', url: 'https://user.ssrf.ac.cn/proposals/a/login', description: '上海同步辐射光源用户系统' },
+                { category: '账户', title: '科技云通行证', url: 'https://passport.escience.cn/', description: '中国科技云统一认证' },
+                { category: '账户', title: '中国科大网络用户服务注册中心', url: 'https://zczx.ustc.edu.cn/accounts', description: 'USTC 网络服务中心' },
+
+                // 乱七八糟
+                { category: '乱七八糟', title: 'Scholarcy', url: 'https://www.scholarcy.com/', description: '在线文章摘要工具' },
+                { category: '乱七八糟', title: 'Manubot', url: 'https://manubot.org/', description: '自动化、协作式的手稿撰写工具' },
+                { category: '乱七八糟', title: 'Notion', url: 'https://www.notion.so/6fbd112c506f45ab8cd4ec01cc512ccb', description: '多合一的笔记、任务、知识库应用' },
+                { category: '乱七八糟', title: '飞书', url: 'https://agrly6o4h6.feishu.cn/drive/home/', description: '一站式企业协作平台' },
+                { category: '乱七八糟', title: '果壳er', url: 'https://xydh.fun/ucas', description: '面向国科大学子的导航' },
+                { category: '乱七八糟', title: '米坛社区 BandBBS', url: 'https://www.bandbbs.cn/whats-new/resources/3804171/', description: '手机、科技爱好者社区' },
+                { category: '乱七八糟', title: '猿分天空', url: 'https://yftk.fun/', description: '程序员的导航站' },
             ];
 
             const searchInput = document.getElementById('searchInput');
@@ -204,11 +327,8 @@
 
             const renderCards = (sites) => {
                 sitesGrid.innerHTML = ''; 
-                if (sites.length === 0) {
-                    noResultsDiv.classList.remove('hidden');
-                } else {
-                    noResultsDiv.classList.add('hidden');
-                }
+                noResultsDiv.classList.toggle('hidden', sites.length > 0);
+
                 sites.forEach(site => {
                     const domain = new URL(site.url).hostname;
                     const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
@@ -219,14 +339,14 @@
                             <div class="flex items-center mb-3">
                                 <img src="${iconUrl}" 
                                      alt="${site.title} icon" 
-                                     class="w-8 h-8 rounded-md mr-3 bg-gray-700/50 object-contain"
-                                     onerror="this.onerror=null; this.replaceWith(document.createElement('div')).innerHTML='<div class=\\'w-8 h-8 rounded-md mr-3 bg-gray-700/50 flex items-center justify-center font-bold text-lg\\'>${fallbackIcon}</div>'">
+                                     class="w-8 h-8 rounded-md mr-3 bg-gray-700/50 object-contain flex-shrink-0"
+                                     onerror="this.onerror=null; this.outerHTML='<div class=\\'w-8 h-8 rounded-md mr-3 bg-gray-700/50 flex items-center justify-center font-bold text-lg flex-shrink-0\\'>${fallbackIcon}</div>'">
                                 <h3 class="text-white font-semibold truncate">${site.title}</h3>
                             </div>
-                            <p class="text-gray-400 text-sm h-10 overflow-hidden">${site.description}</p>
+                            <p class="text-gray-400 text-sm h-10 overflow-hidden text-ellipsis">${site.description || '...'}</p>
                         </a>
                     `;
-                    sitesGrid.innerHTML += card;
+                    sitesGrid.insertAdjacentHTML('beforeend', card);
                 });
             };
 
@@ -238,7 +358,7 @@
                     const button = document.createElement('button');
                     button.textContent = category;
                     button.dataset.category = category;
-                    button.className = `px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                    button.className = `px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 whitespace-nowrap ${
                         isActive 
                         ? 'bg-blue-600 text-white shadow-md' 
                         : 'bg-transparent text-gray-300 hover:bg-white/10'
@@ -256,7 +376,7 @@
                     const lowerCaseSearchTerm = currentSearchTerm.toLowerCase();
                     filteredSites = filteredSites.filter(site => 
                         site.title.toLowerCase().includes(lowerCaseSearchTerm) || 
-                        site.description.toLowerCase().includes(lowerCaseSearchTerm)
+                        (site.description && site.description.toLowerCase().includes(lowerCaseSearchTerm))
                     );
                 }
                 renderCards(filteredSites);
