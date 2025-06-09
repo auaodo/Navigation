@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨微光</title>
+    <title>微光 - 个人导航站</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Google Fonts 的 Inter 字体 -->
@@ -12,196 +12,155 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* 自定义全局样式 */
-        html {
-            /* 默认使用横版背景图 */
-            background-image: url('https://pic.imgdb.cn/item/62bd50cc1d64b0706604e8d9.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed; /* 固定背景图，滚动时不移动 */
-            overflow-x: hidden; /* 防止横向滚动 */
+        :root {
+            --bg-image-light: url('https://pic.imgdb.cn/item/62bd5a9c1d64b07066153c1f.jpg');
+            --bg-image-dark: url('https://pic.imgdb.cn/item/62bd50cc1d64b0706604e8d9.jpg');
+            --bg-color-card: rgba(31, 41, 55, 0.5);
+            --bg-color-card-hover: rgba(55, 65, 81, 0.7);
+            --bg-color-glass: rgba(17, 24, 39, 0.5);
+            --text-color-main: #d1d5db; /* gray-300 */
+            --text-color-muted: #9ca3af; /* gray-400 */
+            --text-color-heading: #ffffff;
+            --text-color-subtitle: #e5e7eb; /* gray-200 */
+        }
+
+        html.light {
+            --bg-color-card: rgba(255, 255, 255, 0.5);
+            --bg-color-card-hover: rgba(255, 255, 255, 0.8);
+            --bg-color-glass: rgba(255, 255, 255, 0.4);
+            --text-color-main: #374151; /* gray-700 */
+            --text-color-muted: #6b7280; /* gray-500 */
+            --text-color-heading: #111827; /* gray-900 */
+            --text-color-subtitle: #4b5563; /* gray-600 */
         }
         
-        /* 响应式媒体查询：当屏幕宽度小于等于768px时，使用竖版背景图 */
-        @media (max-width: 768px) {
-            html {
-                background-image: url('https://pic.imgdb.cn/item/62bd5a9c1d64b07066153c1f.jpg');
-            }
+        html {
+            background-image: var(--bg-image-dark);
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            transition: background-image 0.5s ease;
+        }
+
+        html.light {
+             background-image: var(--bg-image-light);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            background: transparent; /* 使 body 背景透明以显示 html 的背景图 */
+            background: transparent;
+            color: var(--text-color-main);
+            transition: color 0.3s ease;
         }
         
-        /* 动画画布样式 */
         #particleCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* 置于所有内容之后 */
+            z-index: -1;
         }
 
-        /* 自定义滚动条样式 */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(31, 41, 55, 0.3); 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(75, 85, 99, 0.7);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(107, 114, 128, 0.8);
-        }
-
-        /* 分类标签容器样式 (已移除模糊效果) */
         .glassmorphism {
-            background: rgba(17, 24, 39, 0.5); /* 恢复为之前的半透明度 */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* 细微边框 */
-            border-radius: 1rem; /* 圆角 */
-            padding: 1.25rem; /* 增加内边距 */
+            background: var(--bg-color-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            transition: background-color 0.3s ease;
+        }
+        html.light .glassmorphism {
+            border-color: rgba(0, 0, 0, 0.05);
         }
 
-        /* 卡片样式和动效 */
+
         .site-card {
-            background-color: rgba(31, 41, 55, 0.5); /* 半透明卡片背景 */
+            background-color: var(--bg-color-card);
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
-            border-radius: 0.5rem; /* 确保卡片有圆角 */
+            border-radius: 0.5rem;
+        }
+        html.light .site-card {
+            border-color: rgba(0, 0, 0, 0.08);
         }
         .site-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-            background-color: rgba(55, 65, 81, 0.7); /* 悬停时更亮一点 */
+            background-color: var(--bg-color-card-hover);
+        }
+        
+        h1 { color: var(--text-color-heading); }
+        #subtitle { color: var(--text-color-subtitle); }
+        .site-card h3 { color: var(--text-color-heading); }
+        .site-card p { color: var(--text-color-muted); }
+
+        /* 模态框样式 */
+        #addBookmarkModal {
+            background-color: rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
 <body class="text-gray-300">
 
-    <!-- 动画画布 -->
     <canvas id="particleCanvas"></canvas>
+
+    <!-- 主题切换按钮 -->
+    <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 rounded-full bg-gray-500/30 text-white hover:bg-gray-500/50 transition-colors">
+        <svg id="theme-toggle-dark-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    </button>
+
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
 
-        <!-- 头部：Logo 和搜索框 -->
         <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">
-                ✨微光
-            </h1>
-            <p class="text-gray-200 mb-8">Fly to 2025!</p>
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4">✨ 微光</h1>
+            <p id="subtitle" class="mb-8">一个简洁、高效的个人网站导航</p>
             <div class="max-w-2xl mx-auto">
-                <input 
-                    type="search" 
-                    id="searchInput" 
-                    placeholder="输入以筛选，按 Enter 键进行 Google 搜索"
-                    class="w-full px-5 py-3 bg-gray-800/50 border border-gray-700 rounded-full text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                >
+                <input type="search" id="searchInput" placeholder="输入以筛选，按 Enter 键进行 Google 搜索" class="w-full px-5 py-3 bg-gray-800/50 border border-gray-700 rounded-full text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
             </div>
         </header>
 
         <main>
-            <!-- 分类标签 (应用玻璃拟态效果) -->
-            <nav class="flex justify-center flex-wrap gap-2 sm:gap-4 mb-10 glassmorphism" id="categoryTabs">
-                <!-- 分类标签将由 JS 动态生成 -->
-            </nav>
+            <div class="flex justify-center flex-wrap items-center gap-2 sm:gap-4 mb-10 glassmorphism">
+                <nav class="flex justify-center flex-wrap gap-2 sm:gap-4" id="categoryTabs"></nav>
+                 <button id="addBookmarkBtn" class="ml-4 px-3 py-1.5 text-sm font-medium rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">添加书签</button>
+            </div>
 
-            <!-- 网站卡片网格 -->
-            <div id="sitesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                <!-- 网站卡片将由 JS 动态生成 -->
-            </div>
-             <div id="noResults" class="text-center py-12 text-gray-400 hidden">
-                <p class="text-2xl">😅</p>
-                <p class="mt-2">在站内没有找到匹配的网站</p>
-            </div>
+            <div id="sitesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+            <div id="noResults" class="text-center py-12 hidden"><p class="text-2xl">😅</p><p class="mt-2">在站内没有找到匹配的网站</p></div>
         </main>
         
-        <!-- 页脚 -->
-        <footer class="text-center mt-16 text-gray-500 text-sm">
-            <p>© 2025 微光. All Rights Reserved.</p>
-        </footer>
-
+        <footer class="text-center mt-16 text-gray-500 text-sm"><p>© 2025 微光. All Rights Reserved.</p></footer>
     </div>
+
+    <!-- 添加书签模态框 -->
+    <div id="addBookmarkModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div class="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-xl text-white">
+            <h2 class="text-2xl font-bold mb-4">添加新书签</h2>
+            <form id="addBookmarkForm">
+                <div class="mb-4"><label for="site-title" class="block mb-1">标题</label><input type="text" id="site-title" class="w-full p-2 bg-gray-700 rounded" required></div>
+                <div class="mb-4"><label for="site-url" class="block mb-1">链接 (URL)</label><input type="url" id="site-url" class="w-full p-2 bg-gray-700 rounded" required placeholder="https://example.com"></div>
+                <div class="mb-4"><label for="site-desc" class="block mb-1">描述</label><input type="text" id="site-desc" class="w-full p-2 bg-gray-700 rounded"></div>
+                <div class="mb-4"><label for="site-category" class="block mb-1">分类</label><input type="text" id="site-category" class="w-full p-2 bg-gray-700 rounded" required list="category-list"><datalist id="category-list"></datalist></div>
+                <div class="flex items-center mb-4"><input type="checkbox" id="site-pinned" class="mr-2"><label for="site-pinned">置顶此书签</label></div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- 气泡动画脚本 ---
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let animationFrameId;
-            let particlesArray = [];
-
-            const resizeCanvas = () => {
-                cancelAnimationFrame(animationFrameId);
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                initParticles(); 
-                animateParticles();
-            };
-            window.addEventListener('resize', resizeCanvas);
-
-            // 气泡类
-            class Bubble {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + Math.random() * 100;
-                    this.radius = Math.random() * 8 + 2;
-                    this.speedY = Math.random() * 1.5 + 0.5;
-                    this.speedX = Math.random() * 2 - 1;
-                }
-                update() {
-                    this.y -= this.speedY;
-                    this.x += this.speedX;
-                    if (this.y < -this.radius) {
-                        this.y = canvas.height + this.radius;
-                        this.x = Math.random() * canvas.width;
-                    }
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-                    ctx.stroke();
-                }
-            }
-            
-            function initParticles() {
-                particlesArray = [];
-                let numberOfParticles = (canvas.width * canvas.height) / 18000;
-                if (numberOfParticles > 200) numberOfParticles = 200;
-                for (let i = 0; i < numberOfParticles; i++) {
-                    particlesArray.push(new Bubble());
-                }
-            }
-            
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                    particlesArray[i].draw();
-                }
-                animationFrameId = requestAnimationFrame(animateParticles);
-            }
-            
-            resizeCanvas();
-            // --- 气泡动画脚本结束 ---
-
-
-            // --- 导航站核心脚本 ---
-            // 在这里添加或修改你的网站数据
-            // pinned: true  -> 设置为置顶
-            const sitesData = [
-                // 置顶示例
-            
-
+            // --- 默认数据 ---
+            const defaultSitesData = [
                 // 微光
                 { category: '微光', title: 'SEP', url: 'https://sep.ucas.ac.cn/', description: '中国科学院大学选课系统' },
                 { category: '微光', title: 'SINAP', url: 'http://www.sinap.cas.cn/', description: '中科院上海应用物理研究所' },
@@ -219,6 +178,7 @@
                 { category: 'Gather', title: '妖火网', url: 'https://www.yaohuo.me/wapindex.aspx?sid=-2', description: '一个综合性资源社区' },
                 { category: 'Gather', title: '吾爱破解', url: 'https://www.52pojie.cn/forum.php', description: '国内知名的安全技术论坛' },
                 { category: 'Gather', title: 'TG', url: 'https://web.telegram.org/', description: 'Telegram 网页版' },
+                { category: 'Gather', title: 'GitHub', url: 'https://github.com/', description: '全球最大的代码托管平台', pinned: true },
                 { category: 'Gather', title: 'NodeLoc', url: 'https://www.nodeloc.com/', description: '主机和服务器交流社区' },
                 { category: 'Gather', title: 'NodeSeek', url: 'https://www.nodeseek.com/', description: '主机评测和优惠信息' },
                 { category: 'Gather', title: 'Reddit', url: 'https://www.reddit.com/', description: '全球热门话题和兴趣社区' },
@@ -235,9 +195,11 @@
                 { category: '云游', title: '宝塔', url: 'https://47.84.84.77:12138/42e42c19', description: '服务器管理面板' },
                 { category: '云游', title: '青龙', url: 'http://959656.xyz/env', description: '定时任务管理面板' },
                 { category: '云游', title: 'AList', url: 'http://959656.xyz:81/', description: '一个支持多种存储的文件列表程序' },
+                { category: '云游', title: 'Zero', url: 'https://0.email/mail/inbox?category=All Mail', description: '临时匿名邮箱服务' },
                 { category: '云游', title: 'Cloudflare 临时邮件', url: 'https://mail.austinburn.tech/admin', description: '基于Cloudflare的临时邮件' },
 
                 // ART
+                { category: 'ART', title: 'ChatGPT', url: 'https://chat.openai.com/chat', description: 'OpenAI 聊天机器人', pinned: true },
                 { category: 'ART', title: 'DeepSeek', url: 'https://platform.deepseek.com/usage', description: 'DeepSeek AI 平台' },
                 { category: 'ART', title: 'ocoolAI', url: 'https://one.ooo.cool/', description: '一个集成的 AI 服务平台' },
                 { category: 'ART', title: '秘塔AI搜索', url: 'https://metaso.cn/', description: '一个新兴的 AI 搜索引擎' },
@@ -323,39 +285,118 @@
                 { category: '乱七八糟', title: '猿分天空', url: 'https://yftk.fun/', description: '程序员的导航站' },
             ];
 
+
+            // --- 全局变量和 DOM 引用 ---
+            let sitesData = [];
+            let currentCategory = '全部';
+            let currentSearchTerm = '';
+            
+            const doc = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
             const searchInput = document.getElementById('searchInput');
             const categoryTabsContainer = document.getElementById('categoryTabs');
             const sitesGrid = document.getElementById('sitesGrid');
             const noResultsDiv = document.getElementById('noResults');
+            const addBookmarkBtn = document.getElementById('addBookmarkBtn');
+            const modal = document.getElementById('addBookmarkModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const addBookmarkForm = document.getElementById('addBookmarkForm');
+            const categoryDataList = document.getElementById('category-list');
 
-            let currentCategory = '全部';
-            let currentSearchTerm = '';
 
-            const renderCards = (sites) => {
+            // --- 工具函数 ---
+            const debounce = (func, delay) => {
+                let timeoutId;
+                return (...args) => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => func.apply(this, args), delay);
+                };
+            };
+            
+            const originalDeleteIconSVG = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>`;
+
+            // --- 主题管理 ---
+            const setupTheme = () => {
+                const applyTheme = (theme) => {
+                    if (theme === 'light') {
+                        doc.classList.add('light');
+                        darkIcon.classList.add('hidden');
+                        lightIcon.classList.remove('hidden');
+                    } else {
+                        doc.classList.remove('light');
+                        darkIcon.classList.remove('hidden');
+                        lightIcon.classList.add('hidden');
+                    }
+                };
+
+                const currentTheme = localStorage.getItem('theme') || 'dark';
+                applyTheme(currentTheme);
+
+                themeToggle.addEventListener('click', () => {
+                    const newTheme = doc.classList.contains('light') ? 'dark' : 'light';
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
+            };
+
+
+            // --- 书签数据管理 ---
+            const setupBookmarks = () => {
+                const savedSites = localStorage.getItem('sitesData');
+                sitesData = savedSites ? JSON.parse(savedSites) : defaultSitesData;
+                if (!savedSites || JSON.parse(savedSites).length === 0) {
+                    localStorage.setItem('sitesData', JSON.stringify(sitesData));
+                }
+            };
+            
+            const saveBookmarks = () => {
+                localStorage.setItem('sitesData', JSON.stringify(sitesData));
+            };
+
+            const deleteBookmark = (url) => {
+                 sitesData = sitesData.filter(site => site.url !== url);
+                 saveBookmarks();
+                 renderAll();
+            }
+
+            // --- 渲染函数 ---
+            const renderCard = (site) => {
+                const domain = new URL(site.url).hostname;
+                const iconUrl = `https://icon.horse/icon/${domain}`;
+                const fallbackIcon = site.title.charAt(0).toUpperCase();
+                const pinIcon = site.pinned ? '📌' : '🔖';
+
+                const cardEl = document.createElement('div');
+                cardEl.className = 'site-card p-4 relative';
+                cardEl.innerHTML = `
+                    <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="block">
+                        <div class="flex items-center mb-3">
+                            <img data-src="${iconUrl}" 
+                                 alt="${site.title} icon" 
+                                 class="lazy w-8 h-8 rounded-md mr-3 bg-gray-700/50 object-contain flex-shrink-0"
+                                 onerror="this.onerror=null; this.outerHTML='<div class=\\'w-8 h-8 rounded-md mr-3 bg-gray-700/50 flex items-center justify-center font-bold text-lg flex-shrink-0\\'>${fallbackIcon}</div>'">
+                            <h3 class="font-semibold truncate">${pinIcon} ${site.title}</h3>
+                        </div>
+                        <p class="text-sm h-10 overflow-hidden text-ellipsis">${site.description || '...'}</p>
+                    </a>
+                    <button class="delete-btn absolute top-2 right-2 p-1 text-gray-400 hover:text-white transition-all duration-200 opacity-20 hover:opacity-100" title="删除书签" data-url="${site.url}" data-click-count="0">
+                        ${originalDeleteIconSVG}
+                    </button>
+                `;
+                return cardEl;
+            };
+            
+            const renderGrid = (sites) => {
                 sitesGrid.innerHTML = ''; 
                 noResultsDiv.classList.toggle('hidden', sites.length > 0);
+                
+                const fragment = document.createDocumentFragment();
+                sites.forEach(site => fragment.appendChild(renderCard(site)));
+                sitesGrid.appendChild(fragment);
 
-                sites.forEach(site => {
-                    const domain = new URL(site.url).hostname;
-                    // 使用更高质量的图标服务
-                    const iconUrl = `https://icon.horse/icon/${domain}`;
-                    const fallbackIcon = site.title.charAt(0).toUpperCase();
-                    const pinIcon = site.pinned ? '📌' : '🔖';
-
-                    const card = `
-                        <a href="${site.url}" target="_blank" rel="noopener noreferrer" class="site-card block p-4">
-                            <div class="flex items-center mb-3">
-                                <img src="${iconUrl}" 
-                                     alt="${site.title} icon" 
-                                     class="w-8 h-8 rounded-md mr-3 bg-gray-700/50 object-contain flex-shrink-0"
-                                     onerror="this.onerror=null; this.outerHTML='<div class=\\'w-8 h-8 rounded-md mr-3 bg-gray-700/50 flex items-center justify-center font-bold text-lg flex-shrink-0\\'>${fallbackIcon}</div>'">
-                                <h3 class="text-white font-semibold truncate">${pinIcon} ${site.title}</h3>
-                            </div>
-                            <p class="text-gray-400 text-sm h-10 overflow-hidden text-ellipsis">${site.description || '...'}</p>
-                        </a>
-                    `;
-                    sitesGrid.insertAdjacentHTML('beforeend', card);
-                });
+                setupLazyLoading();
             };
 
             const renderCategories = () => {
@@ -369,63 +410,207 @@
                     button.className = `px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 whitespace-nowrap ${
                         isActive 
                         ? 'bg-blue-600 text-white shadow-md' 
-                        : 'bg-transparent text-gray-300 hover:bg-white/10'
+                        : 'bg-gray-500/30 text-gray-200 hover:bg-gray-500/50'
                     }`;
+                    button.addEventListener('click', () => {
+                        currentCategory = category;
+                        renderAll();
+                    });
                     categoryTabsContainer.appendChild(button);
+                });
+                categoryDataList.innerHTML = '';
+                [...new Set(sitesData.map(s => s.category))].forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    categoryDataList.appendChild(option);
                 });
             };
 
-            const filterAndRender = () => {
+            const filterAndRenderGrid = () => {
                 let filteredSites = sitesData;
-                
-                // 1. 按分类过滤
                 if (currentCategory !== '全部') {
                     filteredSites = sitesData.filter(site => site.category === currentCategory);
                 }
-                
-                // 2. 按搜索词过滤
                 if (currentSearchTerm) {
-                    const lowerCaseSearchTerm = currentSearchTerm.toLowerCase();
+                    const term = currentSearchTerm.toLowerCase();
                     filteredSites = filteredSites.filter(site => 
-                        site.title.toLowerCase().includes(lowerCaseSearchTerm) || 
-                        (site.description && site.description.toLowerCase().includes(lowerCaseSearchTerm))
+                        site.title.toLowerCase().includes(term) || 
+                        (site.description && site.description.toLowerCase().includes(term))
                     );
                 }
-
-                // 3. 置顶排序
                 filteredSites.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+                renderGrid(filteredSites);
+            };
 
-                renderCards(filteredSites);
+            const renderAll = () => {
+                renderCategories();
+                filterAndRenderGrid();
             };
             
-            // 监听输入框的实时输入事件，用于筛选
-            searchInput.addEventListener('input', (e) => {
-                currentSearchTerm = e.target.value.trim();
-                filterAndRender();
-            });
+            // --- 功能初始化 ---
+            const setupEventListeners = () => {
+                // 重置删除按钮状态的辅助函数
+                const resetDeleteButtons = (exceptButton = null) => {
+                    document.querySelectorAll('.delete-btn.confirming').forEach(btn => {
+                        if (btn !== exceptButton) {
+                            btn.classList.remove('confirming', 'text-yellow-400', 'text-orange-500');
+                            btn.dataset.clickCount = '0';
+                            btn.title = '删除书签';
+                        }
+                    });
+                };
+
+                // 全局点击，用于重置删除确认
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.delete-btn')) {
+                        resetDeleteButtons();
+                    }
+                });
+
+                // 使用事件委托处理所有卡片上的点击
+                sitesGrid.addEventListener('click', e => {
+                    const deleteBtn = e.target.closest('.delete-btn');
+                    if (deleteBtn) {
+                        e.preventDefault();
+                        resetDeleteButtons(deleteBtn); // 重置其他按钮
+
+                        let clickCount = parseInt(deleteBtn.dataset.clickCount || '0', 10);
+                        clickCount++;
+                        deleteBtn.dataset.clickCount = clickCount;
+
+                        if (clickCount === 1) {
+                            deleteBtn.classList.add('confirming', 'text-yellow-400');
+                            deleteBtn.title = '再按两次删除';
+                        } else if (clickCount === 2) {
+                            deleteBtn.classList.remove('text-yellow-400');
+                            deleteBtn.classList.add('text-orange-500');
+                            deleteBtn.title = '再按一次删除';
+                        } else if (clickCount >= 3) {
+                            const urlToDelete = deleteBtn.dataset.url;
+                            deleteBookmark(urlToDelete);
+                        }
+                    }
+                });
+
+                searchInput.addEventListener('input', debounce(() => {
+                    currentSearchTerm = searchInput.value.trim();
+                    filterAndRenderGrid();
+                }, 250));
             
-            // 监听输入框的按键事件，用于处理 Enter 键
-            searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    const searchTerm = searchInput.value.trim();
-                    if (searchTerm) {
-                        e.preventDefault(); // 阻止默认的回车行为（如表单提交）
-                        const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`;
-                        window.open(googleSearchUrl, '_blank'); // 在新标签页打开谷歌搜索
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && searchInput.value.trim()) {
+                        e.preventDefault();
+                        window.open(`https://www.google.com/search?q=${encodeURIComponent(searchInput.value.trim())}`, '_blank');
+                    }
+                });
+
+                addBookmarkBtn.addEventListener('click', () => modal.classList.replace('hidden', 'flex'));
+                cancelBtn.addEventListener('click', () => modal.classList.replace('flex', 'hidden'));
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.replace('flex', 'hidden');
+                });
+                
+                addBookmarkForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const newSite = {
+                        title: document.getElementById('site-title').value,
+                        url: document.getElementById('site-url').value,
+                        description: document.getElementById('site-desc').value,
+                        category: document.getElementById('site-category').value,
+                        pinned: document.getElementById('site-pinned').checked,
+                    };
+                    sitesData.unshift(newSite);
+                    saveBookmarks();
+                    renderAll();
+                    modal.classList.replace('flex', 'hidden');
+                    addBookmarkForm.reset();
+                });
+            };
+
+            const setupLazyLoading = () => {
+                const lazyImages = document.querySelectorAll('.lazy');
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
+                        }
+                    });
+                }, { rootMargin: '0px 0px 200px 0px' });
+                lazyImages.forEach(img => observer.observe(img));
+            };
+            
+            // --- 动画设置 ---
+            const setupAnimation = () => {
+                const canvas = document.getElementById('particleCanvas');
+                const ctx = canvas.getContext('2d');
+                let animationFrameId;
+                let particlesArray = [];
+
+                const resizeCanvas = () => {
+                    cancelAnimationFrame(animationFrameId);
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    initParticles(); 
+                    animateParticles();
+                };
+                window.addEventListener('resize', resizeCanvas);
+
+                class Bubble {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = canvas.height + Math.random() * 100;
+                        this.radius = Math.random() * 8 + 2;
+                        this.speedY = Math.random() * 1.5 + 0.5;
+                        this.speedX = Math.random() * 2 - 1;
+                    }
+                    update() {
+                        this.y -= this.speedY;
+                        this.x += this.speedX;
+                        if (this.y < -this.radius) {
+                            this.y = canvas.height + this.radius;
+                            this.x = Math.random() * canvas.width;
+                        }
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                        ctx.fill();
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+                        ctx.stroke();
                     }
                 }
-            });
-
-            categoryTabsContainer.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
-                    currentCategory = e.target.dataset.category;
-                    renderCategories();
-                    filterAndRender();
-                }
-            });
             
-            renderCategories();
-            filterAndRender();
+                function initParticles() {
+                    particlesArray = [];
+                    let numberOfParticles = (canvas.width * canvas.height) / 18000;
+                    if (numberOfParticles > 40) numberOfParticles = 40;
+                    for (let i = 0; i < numberOfParticles; i++) {
+                        particlesArray.push(new Bubble());
+                    }
+                }
+            
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                        particlesArray[i].draw();
+                    }
+                    animationFrameId = requestAnimationFrame(animateParticles);
+                }
+            
+                resizeCanvas();
+            };
+            
+            // --- 应用启动 ---
+            setupTheme();
+            setupBookmarks();
+            renderAll();
+            setupEventListeners();
+            setupAnimation();
         });
     </script>
 </body>
