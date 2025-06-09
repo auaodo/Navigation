@@ -176,7 +176,7 @@
             function initParticles() {
                 particlesArray = [];
                 let numberOfParticles = (canvas.width * canvas.height) / 18000;
-                if (numberOfParticles > 40) numberOfParticles = 40;
+                if (numberOfParticles > 200) numberOfParticles = 200;
                 for (let i = 0; i < numberOfParticles; i++) {
                     particlesArray.push(new Bubble());
                 }
